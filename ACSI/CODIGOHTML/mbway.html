@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página MBway</title>
+    <!-- Adiciona o link para a biblioteca Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        /* Adiciona estilos adicionais conforme necessário */
+        body {
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        p {
+            margin: 10px;
+            font-size: 18px
+        }
+
+        #mbwayForm {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 10px 20px;
+            border: 2px solid #000000;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        #btnConfirmar:hover {
+            background-color: #c1bebe;
+        }
+
+
+        #MBWAY {
+            width: 10%; /* Ajuste o tamanho conforme necessário */
+            display: block;
+            margin: 0 auto; /* Isso centraliza a imagem horizontalmente */
+        }
+
+        #btnConfirmar{
+            background-color: #ffffff;
+            color: #000000;
+            padding: 10px 20px;
+            border: 2px solid #000000;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        body {
+      text-align: center;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    nav {
+      background-color: #007DAB;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    nav a {
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      color:#ffffff
+    }
+
+    nav a img {
+      max-width: 100%;
+      height: auto;
+      margin-right: 8px; /* Espaçamento entre a imagem e o texto */
+
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: auto;
+    }
+
+    nav a:hover {
+      background-color: #007DAB;
+      color: black;
+    }
+
+    #cor1{
+        color: #ffffff;
+    }
+
+    #cor2{
+        color: #ffffff;
+    }
+
+    #cor1:hover, #cor2:hover {
+    color: #000000; /* Mude para preto ou a cor desejada */
+}
+       
+    </style>
+</head>
+<body>
+    <nav>
+        <a id="fotoTUB"><img src="Imagens/tub2.png" alt="TUB Logo"></a>
+        <a id="cor1" href="index.html">Comprar título de transporte</a>
+        <a id="cor2" href="viajar.html">Viajar</a>
+      </nav>
+    <img id="MBWAY" src="Imagens/mbway.png" alt="Descrição da imagem">
+
+    <form id="mbwayForm">
+        <div class="form-group">
+            <label for="mbwayNumber">Número de telemóvel</label>
+            <input type="text" id="mbwayNumber" name="mbwayNumber" class="form-control" required>
+        </div>
+        <button id="btnConfirmar" type="button" class="btn btn-primary" onclick="efetuarPagamento()">Confirmar</button>
+    </form>
+
+    <script>
+
+
+
+        function efetuarPagamento() {
+            const mbwayNumber = document.getElementById('mbwayNumber').value;
+            window.location.href = 'finalmbway.html';
+
+            // Dados que serão enviados no corpo do POST
+            const pagamentoData = {
+                tel: mbwayNumber,
+                metodoPagamento: 'MbWay' // Adicione o método de pagamento aqui
+            };
+
+            fetch('http://localhost:8080/api/v1/kafka/publish3', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(pagamentoData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na requisição: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Pagamento realizado:', data);
+                // Adicione aqui a lógica adicional após o pagamento
+                alert('Pagamento com MBway realizado com sucesso!');
+            })
+            .catch(error => console.error('Erro na requisição:', error));
+        }
+    </script>
+
+    <!-- Adiciona os scripts do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

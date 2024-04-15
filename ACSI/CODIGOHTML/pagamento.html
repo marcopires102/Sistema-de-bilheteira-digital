@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Pagamento</title>
+    <!-- Adiciona o link para a biblioteca Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        
+        h1 {
+            text-align: center;
+            font-size: 25px; /* Altere o tamanho conforme necessário */
+    font-family: 'Arial', sans-serif;
+        }
+
+        h2{
+            text-align: center;
+            font-size: 15px; /* Altere o tamanho conforme necessário */
+    font-family: 'Arial', sans-serif;
+        }
+
+        button {
+            margin: 10px;
+        }
+
+        .btn {
+        background-color: transparent;
+        border: 1px solid #000; /* Cor da borda */
+        padding: 10px; /* Ajuste o espaçamento interno conforme necessário */
+        border-radius: 20px;
+    }
+
+    #multibancoBtn{
+        margin-top: 20px; /* Move para baixo */
+    margin-left: 10px; /* Move para a direita */
+    }
+
+    #mbwayBtn:hover {
+        background-color: #ffa8a8;
+    }
+
+    #multibancoBtn:hover {
+        background-color: #a8b9ff;
+    }
+
+    #container{
+       box-shadow:  0 0 10px rgba(0, 0, 0, 0.1);
+       border-radius: 20px;
+       width: 40%;
+      
+    }
+/*navbar*/
+    body {
+      text-align: center;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    nav {
+      background-color: #007DAB;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    nav a {
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      color:#ffffff
+    }
+
+    nav a img {
+      max-width: 100%;
+      height: auto;
+      margin-right: 8px; /* Espaçamento entre a imagem e o texto */
+
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: auto;
+    }
+
+    nav a:hover {
+      background-color: #007DAB;
+      color: black;
+    }
+
+    #cor1{
+        color: #ffffff;
+    }
+
+    #cor2{
+        color: #ffffff;
+    }
+
+    #cor1:hover, #cor2:hover {
+    color: #000000; /* Mude para preto ou a cor desejada */
+}
+    
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a id="fotoTUB"><img src="Imagens/tub2.png" alt="TUB Logo"></a>
+        <a id="cor1" href="index.html">Comprar título de transporte</a>
+        <a id="cor2" href="viajar.html">Viajar</a>
+      </nav>
+        <h1>Seleciona o método de Pagamento</h1>
+        <h2><span id="totalPagar">A carregar...</span></h2>
+
+        <div id="container" class="container">
+        <button id="multibancoBtn" class="btn btn-primary" onclick="pagarMultibanco()">
+            <img src="Imagens/MB1.png" alt="Pagar com Multibanco">
+        </button>
+    
+        <button id="mbwayBtn" class="btn btn-success" onclick="redirectToMbway()">
+            <img src="Imagens/mbway1.png" alt="Pagar com MBway" style="max-width: 100%; max-height: 100%;">
+        </button>
+        </div>
+    </div>
+
+    <script>
+        // Função para buscar o preço
+        function getPreco() {
+            fetch('http://localhost:8080/api/v1/kafka/getAtualizado', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na requisição: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Atualiza o texto no elemento totalPagar com o preço
+                const totalPagarElement = document.getElementById('totalPagar');
+                totalPagarElement.textContent = `Total a pagar: ${data.preco} €`;
+            })
+            .catch(error => console.error('Erro na requisição:', error));
+        }
+
+        // Chama a função de obter o preço quando a página carrega
+        document.addEventListener("DOMContentLoaded", function () {
+            getPreco();
+        });
+
+        function pagarMultibanco() {
+            window.location.href = 'multibanco.html';
+        }
+
+        function redirectToMbway() {
+            window.location.href = 'mbway.html';
+        }
+    </script>
+
+    <!-- Adiciona os scripts do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

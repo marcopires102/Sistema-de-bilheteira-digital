@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento com Multibanco</title>
+    <!-- Adiciona o link para a biblioteca Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+       
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        p {
+            margin: 10px;
+            font-size: 18px
+        }
+        strong {
+            color: #000000; }
+        
+         #MB{
+            width: 5%; /* Ajuste o tamanho conforme necessário */
+            display: block;
+            margin: 0 auto; /* Isso centraliza a imagem horizontalmente */
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 10px 20px;
+            border: 2px solid #000000;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+    
+
+        button:hover {
+            background-color: #c1bebe;
+        }
+
+        /**/
+
+        body {
+      text-align: center;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    nav {
+      background-color: #007DAB;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    nav a {
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      color:#ffffff
+    }
+
+    nav a img {
+      max-width: 100%;
+      height: auto;
+      margin-right: 8px; /* Espaçamento entre a imagem e o texto */
+
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: auto;
+    }
+
+    nav a:hover {
+      background-color: #007DAB;
+      color: black;
+    }
+
+    #cor1{
+        color: #ffffff;
+    }
+
+    #cor2{
+        color: #ffffff;
+    }
+
+    #cor1:hover, #cor2:hover {
+    color: #000000; /* Mude para preto ou a cor desejada */
+}
+    </style>
+</head>
+<body>
+    <nav>
+        <a id="fotoTUB"><img src="Imagens/tub2.png" alt="TUB Logo"></a>
+        <a id="cor1" href="index.html">Comprar título de transporte</a>
+        <a id="cor2" href="viajar.html">Viajar</a>
+      </nav>
+    <div class="container">
+        <img id="MB" src="Imagens/MB.png" alt="Descrição da imagem">
+
+        <p>Entidade: <strong>12345</strong></p>
+        <p>Referência: <strong>1234 1234 1234 1234</strong></p>
+
+        <div class="text-center">
+            <button onclick="confirmarPagamento()">Confirmar</button>
+        </div>
+    </div>
+
+    <script>
+        function confirmarPagamento() {
+            // Dados que serão enviados no corpo do POST
+            window.location.href = 'finalmultibanco.html';
+            const pagamentoData = {
+                entidade: '12345',
+                referencia: '1234 1234 1234 1234',
+                metodoPagamento1: 'Multibanco'
+            };
+
+            fetch('http://localhost:8080/api/v1/kafka/publish5', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(pagamentoData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na requisição: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Pagamento com Multibanco confirmado:', data);
+                // Adicione aqui a lógica adicional após o pagamento
+                alert('Pagamento com Multibanco confirmado com sucesso!');
+            })
+            .catch(error => console.error('Erro na requisição:', error));
+        }
+    </script>
+
+    <!-- Adiciona os scripts do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+

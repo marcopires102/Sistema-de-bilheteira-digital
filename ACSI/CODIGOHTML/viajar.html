@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUB</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            text-align: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background-color: #007DAB;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        nav a {
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            color: #ffffff;
+        }
+
+        nav a img {
+            max-width: 100%;
+            height: auto;
+            margin-right: 8px;
+            display: block;
+            margin: auto;
+        }
+
+        nav a:hover {
+            background-color: #007DAB;
+            color: black;
+        }
+
+        #cor1 {
+            color: #ffffff;
+        }
+
+        #cor2 {
+            color: #ffffff;
+        }
+
+        #cor1:hover,
+        #cor2:hover {
+            color: #000000;
+        }
+
+        #tipoTransporte {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        #quantidadeBilhetes {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .qrcode-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        #qrcode {
+            margin-top: 10px;
+        }
+
+        #totalViagens {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mainPage">
+        <nav>
+            <a id="fotoTUB"><img src="Imagens/tub2.png" alt="TUB Logo"></a>
+            <a id="cor1" href="index.html">Comprar título de transporte</a>
+            <a id="cor2" href="viajar.html">Viajar</a>
+        </nav>
+
+        <div id="tipoTransporte"></div>
+        <div id="quantidadeBilhetes"></div>
+
+        <div class="qrcode-container">
+            <div id="totalViagens"><strong></strong></div>
+            <div id="qrcode"></div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                fetchDataAndDisplayQRCode();
+            });
+
+            function fetchDataAndDisplayQRCode() {
+                // Fetch data from Kafka
+                fetch('http://localhost:8080/api/v1/kafka/getAtualizado', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error in request: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const jsonData = JSON.stringify(data);
+
+                    // Update text based on the type of transportation
+                    const tipoTransporteElement = document.getElementById("tipoTransporte");
+                    const quantidadeBilhetesElement = document.getElementById("quantidadeBilhetes");
+
+                    if (data.tituloTransporte && data.tituloTransporte.toLowerCase() === "bilhete") {
+                        tipoTransporteElement.style.display = "none"; // Oculta a div se for um bilhete
+                        quantidadeBilhetesElement.textContent = `Total de Viagens: ${data.quantidade || 0}`;
+                    } else {
+                        tipoTransporteElement.textContent = data.tituloTransporte || "Tipo de transporte não especificado";
+                        quantidadeBilhetesElement.style.display = "none"; // Oculta a div se não for um bilhete
+                    }
+
+                    // Generate QR Code
+                    const qrcode = new QRCode(document.getElementById("qrcode"), {
+                        text: jsonData,
+                        width: 256,
+                        height: 256,
+                    });
+                })
+                .catch(error => console.error('Error in request:', error));
+            }
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

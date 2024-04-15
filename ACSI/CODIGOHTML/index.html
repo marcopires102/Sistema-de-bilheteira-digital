@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUB</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        #h1{
+            font-size: 30px; /* Altere o tamanho conforme necessário */
+    font-family: 'Arial', sans-serif;
+        }
+      
+        #individual{
+            background-color: #007DAB;
+            color: #ffffff;
+            padding: 3px 8px;
+            border: 2px solid #000000;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 2px;
+        }
+
+        #Comprar{
+            background-color: #ffffff;
+            color: #000000;
+            padding: 5px 12px;
+            border: 2px solid #000000;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #Remover{
+            background-color: #f1b2b2;
+            color: #000000;
+            padding: 5px 12px;
+            border: 2px solid #000000;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #Passe{
+            background-color: #007DAB;
+            color: #ffffff;
+            padding: 5px 12px;
+            border: 2px solid #000000;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #Adicionar1{
+            background-color: #007DAB;
+            border: 2px solid #000000;
+            border-radius: 3px;
+        }
+
+        #Remover1{
+            background-color: #007DAB;
+            border: 2px solid #000000;
+            border-radius: 3px;
+        }
+        #Comprar:hover {
+            background-color: #c1bebe;
+        }
+
+        #Remover:hover {
+            background-color: #f38b8b;
+        }
+
+        #Adicionar1:hover{
+            background-color: #029cc3
+        }
+
+        #Remover1:hover{
+            background-color: #029cc3
+        }
+        
+        #Passe:hover {
+            background-color: #029cc3;
+        }
+/*navbar*/
+        body {
+      text-align: center;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    nav {
+      background-color: #007DAB;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    nav a {
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      color:#ffffff
+    }
+
+    nav a img {
+      max-width: 100%;
+      height: auto;
+      margin-right: 8px; /* Espaçamento entre a imagem e o texto */
+
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: auto;
+    }
+
+    nav a:hover {
+      background-color: #007DAB;
+      color: black;
+    }
+
+    #cor1{
+        color: #ffffff;
+    }
+
+    #cor2{
+        color: #ffffff;
+    }
+
+    #cor1:hover, #cor2:hover {
+    color: #000000; /* Mude para preto ou a cor desejada */
+}
+    </style>
+</head>
+<body>
+    
+    <div id="mainPage">
+        <nav>
+            <a id="fotoTUB"><img src="Imagens/tub2.png" alt="TUB Logo"></a>
+            <a id="cor1" href="index.html">Comprar título de transporte</a>
+        <a id="cor2" href="viajar.html">Viajar</a>
+          </nav>
+
+        <section class="container mt-5">
+            <div class="text-center">
+                <h1>Compra de títulos de transporte</h1>
+            </div>
+
+            <form class="mx-auto" style="max-width: 400px;">
+                <div class="form-group">
+                    
+                    <div class="input-group">
+                        <button id="individual" type="button" class="btn btn-dark">Bilhete</button>
+                        
+                        <div class="input-group-prepend">
+                            <button id="Adicionar1" type="button" class="btn btn-dark" onclick="updateQuantity('quantityTicket', -1, 'totalPrice', 1.5)">-</button>
+                        </div>
+                        <input type="number" id="quantityTicket" name="quantityTicket" value="1" min="1" max="10" oninput="updateQuantity('quantityTicket', 0, 'totalPrice', 1.5)" class="form-control text-center">
+                        <div class="input-group-append">
+                            <button id="Remover1" type="button" class="btn btn-dark" onclick="updateQuantity('quantityTicket', 1, 'totalPrice', 1.5)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button id="Passe" type="button" class="btn btn-dark btn-block" onclick="buyPass()"> Passe Mensal</button>
+                </div>
+
+                <button id="Remover" type="button" class="btn btn-danger btn-block" onclick="resetPurchase()">Remover</button>
+
+                <button id= "Comprar" type="button" class="btn btn-dark btn-block" onclick="makePurchase()">Comprar</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        let selectedOption = 'bilhete';
+
+        function updateQuantity(inputId, change, priceElementId, pricePerUnit) {
+            // Mantém a lógica atual para atualizar a quantidade
+            const input = document.getElementById(inputId);
+            let quantity = parseInt(input.value) + change;
+
+            if (quantity < 0) {
+                quantity = 0;
+            } else if (quantity > 10) {
+                quantity = 10;
+            }
+
+            input.value = quantity;
+            // Adiciona a classe 'selected-tickets' se o passe mensal estiver selecionado ou a quantidade for maior que zero
+            input.classList.toggle('selected-tickets', (selectedOption === 'pass') || quantity > 0);
+        }
+
+        function buyPass() {
+            selectedOption = 'pass';
+            document.getElementById('quantityTicket').value = 1; // Define o número de bilhetes como 0
+            document.getElementById('quantityTicket').classList.remove('selected-tickets');
+        }
+
+        function resetPurchase() {
+            document.getElementById('quantityTicket').value = 1;
+            selectedOption = 'bilhete';
+        }
+
+        function makePurchase() {
+            window.location.href = 'pagamento.html';
+    const quantity = document.getElementById('quantityTicket').value;
+    const tituloTransporte = selectedOption === 'pass' ? 'Passe Mensal' : 'bilhete';
+
+    const paymentInfo = {
+        quantidade: quantity,
+        tituloTransporte: tituloTransporte
+    };
+
+    fetch('http://localhost:8080/api/v1/kafka/publish', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(paymentInfo)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro na requisição: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Compra realizada:', data);
+        // Aqui você pode realizar ações adicionais após a compra, se necessário
+        resetPurchase();  // Chama a função para redefinir a quantidade de bilhetes
+
+        // Redireciona para a página de pagamento
+       
+    })
+    .catch(error => console.error('Erro na requisição:', error));
+}
+
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

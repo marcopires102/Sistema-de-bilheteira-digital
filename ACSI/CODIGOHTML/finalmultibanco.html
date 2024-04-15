@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Compra</title>
+    <!-- Adiciona o link para a biblioteca Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+         body {
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        p {
+            margin: 10px;
+            font-size: 18px
+        }
+
+        #titulo{
+            font-size: 25px; /* Altere o tamanho conforme necessário */
+    font-family: 'Arial', sans-serif;
+    
+    
+        }
+
+        #quantidades,
+        #tituloTransporte,
+        #preco,
+        #metodoPagamento,
+        #entidade,#referencia{
+    text-align: left;
+            background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 16px; /* Altere o tamanho conforme necessário */
+    font-family: 'Arial', sans-serif; /* Altere a fonte conforme necessário */
+        }
+        #detalhesCompra {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        #efetuarCompraBtn {
+            margin-top: 30px;
+        }
+
+        #container{
+            width: 30%;
+        }
+
+        #efetuarCompraBtn{
+            background-color: #ffffff;
+            color: #000000;
+            padding: 10px 20px;
+            border: 2px solid #000000;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        #efetuarCompraBtn:hover {
+            background-color: #c1bebe;
+        }
+        
+        body {
+      text-align: center;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    nav {
+      background-color: #007DAB;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    nav a {
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      color:#ffffff
+    }
+
+    nav a img {
+      max-width: 100%;
+      height: auto;
+      margin-right: 8px; /* Espaçamento entre a imagem e o texto */
+
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: auto;
+    }
+
+    nav a:hover {
+      background-color: #007DAB;
+      color: black;
+    }
+
+    #cor1{
+        color: #ffffff;
+    }
+
+    #cor2{
+        color: #ffffff;
+    }
+
+    #cor1:hover, #cor2:hover {
+    color: #000000; /* Mude para preto ou a cor desejada */
+}
+    </style>
+</head>
+<body>
+    <nav>
+        <a id="fotoTUB"><img src="Imagens/tub2.png" alt="TUB Logo"></a>
+        <a id="cor1" href="index.html">Comprar título de transporte</a>
+        <a id="cor2" href="viajar.html">Viajar</a>
+      </nav>
+    <h1 id="titulo">Detalhes da Compra</h1>
+    <div id="container" class="container">
+
+        <div id="detalhesCompra">
+            <p id="quantidades">Quantidade: </p>
+            <p id="tituloTransporte">Tipo de Bilhete: </p>
+            <p id="preco">Preço: </p>
+            <p id="metodoPagamento">Método de Pagamento: </p>
+            <p id="referencia">Referencia: </p>
+            <p id="entidade">Entidade: </p>
+        </div>
+
+        <div class="text-center"> <!-- Adiciona a classe text-center -->
+            <button id="efetuarCompraBtn" class="btn btn-primary" onclick="efetuarCompra()">Efetuar Pagamento</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            obterDetalhesCompra();
+        });
+
+        function obterDetalhesCompra() {
+            // Solicitação para obter o preço, quantidade e tipo de transporte
+            fetch('http://localhost:8080/api/v1/kafka/getAtualizado', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na requisição: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const quantidadeBilhetesElement = document.getElementById('quantidades');
+                const tipoBilheteElement = document.getElementById('tituloTransporte');
+                const precoElement = document.getElementById('preco');
+
+                quantidadeBilhetesElement.textContent += data.quantidade;
+                tipoBilheteElement.textContent += data.tituloTransporte;
+                precoElement.textContent += data.preco + ' €';
+            })
+            .catch(error => console.error('Erro na requisição:', error));
+
+            // Solicitação para obter o método de pagamento
+            fetch('http://localhost:8080/api/v1/kafka/getAtualizado2', {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Erro na requisição: ' + response.statusText);
+    }
+    return response.json();
+})
+.then(data => {
+    const metodoPagamentoElement = document.getElementById('metodoPagamento');
+    const referenciaElement = document.getElementById('referencia');
+    const entidadeElement = document.getElementById('entidade');
+
+    metodoPagamentoElement.textContent += data.metodoPagamento1; // ou ajuste para o nome correto
+    referenciaElement.textContent += data.referencia;
+    entidadeElement.textContent += data.entidade;
+
+
+})
+.catch(error => console.error('Erro na requisição:', error));
+        }
+
+        function efetuarCompra() {
+            window.location.href = 'index.html';
+    // Obtenha as variáveis necessárias
+    const quantidade = document.getElementById('quantidades').textContent.replace('Quantidade: ', '');
+    const tituloTransporte = document.getElementById('tituloTransporte').textContent.replace('Tipo de Bilhete: ', '');
+    const preco = document.getElementById('preco').textContent.replace('Preço: ', '').replace(' €', '');
+    const metodoPagamento1 = document.getElementById('metodoPagamento').textContent.replace('Método de Pagamento: ', '');
+    const referencia = document.getElementById('referencia').textContent.replace('Referencia: ', '');
+    const entidade = document.getElementById('entidade').textContent.replace('Entidade: ', '');
+
+    // Construa o corpo da requisição
+    const body = JSON.stringify({
+        quantidade: quantidade,
+        tituloTransporte: tituloTransporte,
+        preco: preco,
+        metodoPagamento1: metodoPagamento1,
+        referencia: referencia,
+        entidade: entidade
+    });
+
+    // Faça a requisição POST
+    fetch('http://localhost:8080/api/v1/kafka/publish6', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: body
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro na requisição: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Manipule a resposta da requisição, se necessário
+        console.log('Resposta da requisição:', data);
+    })
+    .catch(error => console.error('Erro na requisição:', error));
+}
+
+    </script>
+
+    <!-- Adiciona os scripts do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
